@@ -2,10 +2,7 @@ package com.example.kubri.fei_mtmp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.EditText;
+import android.util.Pair;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -29,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         final SeekBar veloSeek = findViewById(R.id.seekBarVelocity);
         final TextView veloText = findViewById(R.id.editTextVelocity);
 
+        final Parabola parabola = findViewById(R.id.parabolaView);
+
 
         angleSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -36,7 +35,11 @@ public class MainActivity extends AppCompatActivity {
                 int angle = seekBar.getProgress();
                 int velocity = veloSeek.getProgress();
                 angleText.setText(String.valueOf(angle));
-                resText.setText(parabolaToString(parabola(angle, velocity)));
+
+                List<Pair<Double, Double>> parabolaData = parabola(angle, velocity);
+//                resText.setText(parabolaToString(parabolaData));
+                parabola.reDraw(parabolaData);
+
             }
 
             @Override
@@ -55,8 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
                 int velocity = seekBar.getProgress();
                 int angle = angleSeek.getProgress();
-                veloText.setText(String.valueOf(angle));
-                resText.setText(parabolaToString(parabola(angle, velocity)));
+                veloText.setText(String.valueOf(velocity));
+                List<Pair<Double, Double>> parabolaData = parabola(angle, velocity);
+//                resText.setText(parabolaToString(parabola(angle, velocity)));
+                parabola.reDraw(parabolaData);
             }
 
             @Override
