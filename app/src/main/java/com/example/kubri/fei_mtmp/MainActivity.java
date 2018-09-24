@@ -1,18 +1,24 @@
 package com.example.kubri.fei_mtmp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Pair;
+import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import static com.example.kubri.fei_mtmp.Calculations.*;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String PARABOLA_DATA = "com.example.myfirstapp.PARABOLA_DATA";
+
+
+    private ArrayList<ParabolaPoint> parabolaData = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,23 +28,20 @@ public class MainActivity extends AppCompatActivity {
 
         final SeekBar angleSeek = findViewById(R.id.seekBarAngle);
         final TextView angleText = findViewById(R.id.editTextAngle);
-        final TextView resText = findViewById(R.id.resultText);
         final SeekBar veloSeek = findViewById(R.id.seekBarVelocity);
         final TextView veloText = findViewById(R.id.editTextVelocity);
 
-        final Parabola parabola = findViewById(R.id.parabolaView);
+        final Preview preview = findViewById(R.id.mainPreview);
 
 
-        angleSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        angleSeek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int angle = seekBar.getProgress();
                 int velocity = veloSeek.getProgress();
                 angleText.setText(String.valueOf(angle));
-
-                List<Pair<Double, Double>> parabolaData = parabola(angle, velocity);
-//                resText.setText(parabolaToString(parabolaData));
-                parabola.reDraw(parabolaData);
+                setParabolaData(parabola(angle, velocity));
+                preview.reDraw(getParabolaData(),0.3);
 
             }
 
@@ -52,16 +55,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        veloSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        veloSeek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                 int velocity = seekBar.getProgress();
                 int angle = angleSeek.getProgress();
                 veloText.setText(String.valueOf(velocity));
-                List<Pair<Double, Double>> parabolaData = parabola(angle, velocity);
-//                resText.setText(parabolaToString(parabola(angle, velocity)));
-                parabola.reDraw(parabolaData);
+                setParabolaData(parabola(angle, velocity));
+                preview.reDraw(getParabolaData(), 0.3);
             }
 
             @Override
@@ -71,12 +73,49 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
+
+
         });
 
 
-//        View graphView = findViewById()
+        int angle = angleSeek.getProgress();
+        int velocity = veloSeek.getProgress();
+
+        setParabolaData(parabola(angle, velocity));
+        preview.reDraw(getParabolaData(),0.3);
+
+
+        // NAV buttons
+        Button ButtonAnimate = findViewById(R.id.buttonAnimate);
+        ButtonAnimate.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), AnimateActivity.class);
+            intent.putExtra(PARABOLA_DATA, getParabolaData());
+            getApplicationContext().startActivity(intent);
+        });
+
+        Button ButtonList = findViewById(R.id.buttonList);
+        ButtonList.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+            intent.putExtra(PARABOLA_DATA, getParabolaData());
+            getApplicationContext().startActivity(intent);
+        });
+
+        Button ButtonGraph = findViewById(R.id.buttonGraph);
+        ButtonGraph.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), GraphActivity.class);
+            intent.putExtra(PARABOLA_DATA, getParabolaData());
+            getApplicationContext().startActivity(intent);
+        });
+
 
     }
 
 
+    public ArrayList<ParabolaPoint> getParabolaData() {
+        return parabolaData;
+    }
+
+    public void setParabolaData(ArrayList<ParabolaPoint> parabolaData) {
+        this.parabolaData = parabolaData;
+    }
 }

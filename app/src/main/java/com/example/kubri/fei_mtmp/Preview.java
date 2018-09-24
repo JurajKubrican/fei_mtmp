@@ -14,17 +14,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Parabola extends View {
+public class Preview extends View {
 
 
-    public Parabola(Context context, @Nullable AttributeSet attrs) {
+    public Preview(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.init();
     }
 
 
     private Paint mParabolaPaint;
-    private List<Pair<Pair<Double, Double>, Pair<Double, Double>>> parabolaData = new ArrayList<>();
+    private List<Pair<ParabolaPoint, ParabolaPoint>> parabolaData = new ArrayList<>();
 
     private void init() {
         mParabolaPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -33,10 +33,10 @@ public class Parabola extends View {
         mParabolaPaint.setColor(Color.LTGRAY);
     }
 
-    public void reDraw(List<Pair<Double, Double>> data) {
-
+    public void reDraw(List<ParabolaPoint> data, double scale) {
+        final List<ParabolaPoint> data2 = data.stream().map(item -> new ParabolaPoint(item.x * scale, item.y * scale, item.t * scale)).collect(Collectors.toList());
         this.parabolaData = IntStream.range(1, data.size())
-                .mapToObj(i -> new Pair<>(data.get(i - 1), data.get(i)))
+                .mapToObj(i -> new Pair<>(data2.get(i - 1), data2.get(i)))
                 .collect(Collectors.toList());
 
         invalidate();
@@ -49,9 +49,9 @@ public class Parabola extends View {
         int canvasHeight = canvas.getHeight();
 
         this.parabolaData.forEach(item -> {
-            Pair<Double, Double> start = item.first;
-            Pair<Double, Double> end = item.second;
-            canvas.drawLine(start.second.floatValue(), canvasHeight - start.first.floatValue(), end.second.floatValue(), canvasHeight - end.first.floatValue(), mParabolaPaint);
+            ParabolaPoint start = item.first;
+            ParabolaPoint end = item.second;
+            canvas.drawLine(start.x.floatValue(), canvasHeight - start.y.floatValue(), end.x.floatValue(), canvasHeight - end.y.floatValue(), mParabolaPaint);
         });
     }
 

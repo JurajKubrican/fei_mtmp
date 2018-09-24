@@ -2,4 +2,7 @@
     <string name="app_name">fei_mtmp</string>
     <string name="velocity">Velocity</string>
     <string name="angle">Angle</string>
+    <string name="animate">Animate</string>
+    <string name="list">List</string>
+    <string name="graph">Graph</string>
 </resources>
