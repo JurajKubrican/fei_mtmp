@@ -1,8 +1,11 @@
 package com.example.kubri.fei_mtmp;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -16,7 +19,6 @@ import static com.example.kubri.fei_mtmp.Calculations.*;
 public class MainActivity extends AppCompatActivity {
 
     public static final String PARABOLA_DATA = "com.example.myfirstapp.PARABOLA_DATA";
-
 
     private ArrayList<ParabolaPoint> parabolaData = new ArrayList<>();
 
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         final Preview preview = findViewById(R.id.mainPreview);
 
 
+
+
         angleSeek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -41,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 int velocity = veloSeek.getProgress();
                 angleText.setText(String.valueOf(angle));
                 setParabolaData(parabola(angle, velocity));
-                preview.reDraw(getParabolaData(),0.3);
+                preview.reDrawPreview(getParabolaData());
 
             }
 
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 int angle = angleSeek.getProgress();
                 veloText.setText(String.valueOf(velocity));
                 setParabolaData(parabola(angle, velocity));
-                preview.reDraw(getParabolaData(), 0.3);
+                preview.reDrawPreview(getParabolaData());
             }
 
             @Override
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         int velocity = veloSeek.getProgress();
 
         setParabolaData(parabola(angle, velocity));
-        preview.reDraw(getParabolaData(),0.3);
+        preview.reDrawPreview(getParabolaData());
 
 
         // NAV buttons
@@ -101,9 +105,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button ButtonGraph = findViewById(R.id.buttonGraph);
-        ButtonGraph.setOnClickListener(v -> {
+        ButtonGraph.setOnClickListener((View v) -> {
             Intent intent = new Intent(getApplicationContext(), GraphActivity.class);
-            intent.putExtra(PARABOLA_DATA, getParabolaData());
+            ArrayList<ParabolaPoint> data = getParabolaData();
+            intent.putExtra(PARABOLA_DATA, data);
             getApplicationContext().startActivity(intent);
         });
 

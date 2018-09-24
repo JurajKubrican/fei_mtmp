@@ -14,7 +14,7 @@ public class GraphActivity extends AppCompatActivity {
 
         Preview preview = findViewById(R.id.graphPreview);
         ArrayList<ParabolaPoint> parabolaData = (ArrayList<ParabolaPoint>) getIntent().getExtras().get(MainActivity.PARABOLA_DATA);
-        preview.reDraw(parabolaData, 1.0);
+        preview.reDraw(parabolaData);
 
     }
 }

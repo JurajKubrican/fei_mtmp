@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Pair;
+import android.view.Display;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -33,10 +35,20 @@ public class Preview extends View {
         mParabolaPaint.setColor(Color.LTGRAY);
     }
 
-    public void reDraw(List<ParabolaPoint> data, double scale) {
+    public void reDrawPreview(List<ParabolaPoint> data) {
+        double scale = 0.65;
+
         final List<ParabolaPoint> data2 = data.stream().map(item -> new ParabolaPoint(item.x * scale, item.y * scale, item.t * scale)).collect(Collectors.toList());
         this.parabolaData = IntStream.range(1, data.size())
                 .mapToObj(i -> new Pair<>(data2.get(i - 1), data2.get(i)))
+                .collect(Collectors.toList());
+
+        invalidate();
+    }
+
+    public void reDraw(List<ParabolaPoint> data) {
+        this.parabolaData = IntStream.range(1, data.size())
+                .mapToObj(i -> new Pair<>(data.get(i - 1), data.get(i)))
                 .collect(Collectors.toList());
 
         invalidate();

@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".AnimateActivity" />
         <activity android:name=".ListActivity" />
-        <activity android:name=".GraphActivity"></activity>
+        <activity android:name=".GraphActivity" />
+
     </application>
 
 </manifest>

@@ -17,8 +17,7 @@ class Calculations {
 
         double t = 0;
 
-        for (double yS = 0; yS >= 0; yS += .01) {
-            t += .01;
+        for (double yS = 0; yS >= 0; t += .1) {
             yS = xV * t - 9.81 * t * t / 2;
             double xS = yV * t;
             res.add(new ParabolaPoint(xS, yS, t));
