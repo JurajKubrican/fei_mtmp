@@ -141,8 +141,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (isOnline()) {
             toggleLoading(true);
+            int angle = ((SeekBar) findViewById(R.id.seekBarAngle)).getProgress();
+            int velocity = ((SeekBar) findViewById(R.id.seekBarVelocity)).getProgress();
 
-            String url = "https://wt.knet.sk/mtmp_server/?angle=50&velocity=50";
+            String url = "http://relay.knet.sk?url=https%3A%2F%2Fwt-kubrican_juraj-gmail_com-0.sandbox.auth0-extend.com%2Fmtmp_server%3Fangle%3D" + angle + "%26velocity%3D" + velocity;
             RequestQueue queue = Volley.newRequestQueue(this);
             JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
                 ArrayList<ParabolaPoint> data = new ArrayList<>();
