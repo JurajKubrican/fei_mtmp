@@ -1,17 +1,29 @@
 package com.example.kubri.fei_mtmp;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static com.example.kubri.fei_mtmp.Calculations.*;
 
@@ -34,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
         final TextView veloText = findViewById(R.id.editTextVelocity);
 
         final Preview preview = findViewById(R.id.mainPreview);
-
-
 
 
         angleSeek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -91,36 +101,83 @@ public class MainActivity extends AppCompatActivity {
 
         // NAV buttons
         Button ButtonAnimate = findViewById(R.id.buttonAnimate);
-        ButtonAnimate.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AnimateActivity.class);
-            intent.putExtra(PARABOLA_DATA, getParabolaData());
-            getApplicationContext().startActivity(intent);
-        });
+        ButtonAnimate.setOnClickListener(v -> switchView(AnimateActivity.class));
 
         Button ButtonList = findViewById(R.id.buttonList);
-        ButtonList.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), ListActivity.class);
-            intent.putExtra(PARABOLA_DATA, getParabolaData());
-            getApplicationContext().startActivity(intent);
-        });
+        ButtonList.setOnClickListener(v -> switchView(ListActivity.class));
 
         Button ButtonGraph = findViewById(R.id.buttonGraph);
-        ButtonGraph.setOnClickListener((View v) -> {
-            Intent intent = new Intent(getApplicationContext(), GraphActivity.class);
-            ArrayList<ParabolaPoint> data = getParabolaData();
-            intent.putExtra(PARABOLA_DATA, data);
-            getApplicationContext().startActivity(intent);
-        });
+        ButtonGraph.setOnClickListener((View v) -> switchView(GraphActivity.class));
 
 
     }
 
 
-    public ArrayList<ParabolaPoint> getParabolaData() {
+    ArrayList<ParabolaPoint> getParabolaData() {
         return parabolaData;
     }
 
-    public void setParabolaData(ArrayList<ParabolaPoint> parabolaData) {
+    void setParabolaData(ArrayList<ParabolaPoint> parabolaData) {
         this.parabolaData = parabolaData;
     }
+
+    boolean isOnline() {
+        Switch s = findViewById(R.id.onlineSwitch);
+        return s.isChecked();
+    }
+
+
+    void toggleLoading(boolean isLoading) {
+
+        findViewById(R.id.progress_overlay).setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        findViewById(R.id.buttonAnimate).setEnabled(!isLoading);
+        findViewById(R.id.buttonGraph).setEnabled(!isLoading);
+        findViewById(R.id.buttonList).setEnabled(!isLoading);
+
+    }
+
+    void switchView(Class<?> cls) {
+        Intent intent = new Intent(getApplicationContext(), cls);
+
+        if (isOnline()) {
+            toggleLoading(true);
+
+            String url = "https://wt.knet.sk/mtmp_server/?angle=50&velocity=50";
+            RequestQueue queue = Volley.newRequestQueue(this);
+            JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+                ArrayList<ParabolaPoint> data = new ArrayList<>();
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject o = response.getJSONObject(i);
+                        data.add(new ParabolaPoint(o.getDouble("x"), o.getDouble("y"), o.getDouble("t")));
+
+                    } catch (JSONException e) {
+                        toggleLoading(false);
+                        System.out.println("err3");
+                        e.printStackTrace();
+                    }
+                }
+                intent.putExtra(PARABOLA_DATA, data);
+                getApplicationContext().startActivity(intent);
+                System.out.println("success");
+                toggleLoading(false);
+
+            }, e -> {
+                System.out.println("err2");
+                toggleLoading(false);
+                e.printStackTrace();
+            });
+
+            System.out.println("sending");
+            queue.add(jsonObjectRequest);
+
+
+        } else {
+            ArrayList<ParabolaPoint> data = getParabolaData();
+            intent.putExtra(PARABOLA_DATA, data);
+            getApplicationContext().startActivity(intent);
+        }
+
+    }
+
 }
