@@ -6,15 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".AnimateActivity">
 
+    <com.example.kubri.fei_mtmp.Preview
+        android:id="@+id/animateBg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/animateButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <SeekBar
         android:id="@+id/seekBarAnimate"
         android:layout_width="0dp"
         android:layout_height="47dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
+        android:min="2"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/animateButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
@@ -24,7 +39,7 @@
         android:layout_gravity="bottom"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/seekBarAnimate"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarAnimationSpeed"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
@@ -42,8 +57,21 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:enabled="false"
-        android:text="@string/animate"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/stopAnim"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarAnimate"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBarAnimationSpeed"
+        android:layout_width="0dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="12dp"
+        android:progress="50"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarAnimate"
+        app:layout_constraintEnd_toStartOf="@+id/animateButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

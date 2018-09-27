@@ -155,22 +155,18 @@ public class MainActivity extends AppCompatActivity {
 
                     } catch (JSONException e) {
                         toggleLoading(false);
-                        System.out.println("err3");
                         e.printStackTrace();
                     }
                 }
                 intent.putExtra(PARABOLA_DATA, data);
                 getApplicationContext().startActivity(intent);
-                System.out.println("success");
                 toggleLoading(false);
 
             }, e -> {
-                System.out.println("err2");
                 toggleLoading(false);
                 e.printStackTrace();
             });
 
-            System.out.println("sending");
             queue.add(jsonObjectRequest);
 
 

@@ -7,4 +7,7 @@
     <string name="graph">Graph</string>
     <string name="rocket">rocket</string>
     <string name="online">Online</string>
+    <string name="startAnim">Start</string>
+    <string name="stopAnim">Stop</string>
+    <string name="restartAnim">Restart</string>
 </resources>

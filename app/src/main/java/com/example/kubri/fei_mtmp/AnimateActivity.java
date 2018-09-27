@@ -44,21 +44,24 @@ public class AnimateActivity extends AppCompatActivity {
 
         buttonAnimate = findViewById(R.id.animateButton);
         buttonAnimate.setOnClickListener(v -> {
-            buttonAnimate.setEnabled(false);
-            animationOn = true;
-            animateFrame(seekBarAnimate.getProgress());
+            if (animationOn) {
+                disableAnim();
+            } else if (seekBarAnimate.getProgress() > parabolaData.size() - 4) {
+                enableAnim(0);
+            } else {
+                enableAnim(seekBarAnimate.getProgress());
+            }
         });
 
         seekBarAnimate = findViewById(R.id.seekBarAnimate);
-        seekBarAnimate.setMax(parabolaData.size() - 1);
+        seekBarAnimate.setMax(parabolaData.size() - 2);
         seekBarAnimate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (seekOn) {
-                    buttonAnimate.setEnabled(true);
-                    animationOn = false;
-                    animateFrame(progress);
+                    disableAnim();
+                    animateFrame(progress - 1);
                 }
             }
 
@@ -72,6 +75,8 @@ public class AnimateActivity extends AppCompatActivity {
                 seekOn = false;
             }
         });
+
+        ((Preview) findViewById(R.id.animateBg)).reDraw(parabolaData);
     }
 
 
@@ -89,7 +94,8 @@ public class AnimateActivity extends AppCompatActivity {
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(translateAnimator, rotateAnimator);
-        animatorSet.setDuration(10);
+
+        animatorSet.setDuration((100 - ((SeekBar) findViewById(R.id.seekBarAnimationSpeed)).getProgress()) / 10);
 
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -97,6 +103,9 @@ public class AnimateActivity extends AppCompatActivity {
                 if (index + 1 < parabolaData.size() - 1 && animationOn) {
                     seekBarAnimate.setProgress(index);
                     animateFrame(index + 1);
+                } else if (animationOn) {
+                    animationOn = false;
+                    buttonAnimate.setText(R.string.restartAnim);
                 }
             }
         });
@@ -104,4 +113,14 @@ public class AnimateActivity extends AppCompatActivity {
     }
 
 
+    private void disableAnim() {
+        buttonAnimate.setText(R.string.startAnim);
+        animationOn = false;
+    }
+
+    private void enableAnim(int progress) {
+        buttonAnimate.setText(R.string.stopAnim);
+        animationOn = true;
+        animateFrame(progress + 1);
+    }
 }
