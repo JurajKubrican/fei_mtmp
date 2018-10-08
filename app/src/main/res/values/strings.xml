@@ -10,4 +10,6 @@
     <string name="startAnim">Start</string>
     <string name="stopAnim">Stop</string>
     <string name="restartAnim">Restart</string>
+    <string name="graphX">t[s]</string>
+    <string name="graphY">h[m]</string>
 </resources>

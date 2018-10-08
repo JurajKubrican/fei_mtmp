@@ -31,6 +31,7 @@ import static com.example.kubri.fei_mtmp.Calculations.*;
 public class MainActivity extends AppCompatActivity {
 
     public static final String PARABOLA_DATA = "com.example.myfirstapp.PARABOLA_DATA";
+    public static final String PARABOLA_ANGLE = "com.example.myfirstapp.PARABOLA_ANGLE";
 
     private ArrayList<ParabolaPoint> parabolaData = new ArrayList<>();
 

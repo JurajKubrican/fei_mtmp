@@ -24,7 +24,6 @@ public class AnimateActivity extends AppCompatActivity {
 
 
     FrameLayout projectileView;
-    Double initialAngle;
 
 
     @Override
@@ -36,9 +35,6 @@ public class AnimateActivity extends AppCompatActivity {
         parabolaData = (ArrayList<ParabolaPoint>) getIntent().getExtras().get(MainActivity.PARABOLA_DATA);
 
 
-        ParabolaPoint p1 = parabolaData.get(0);
-        ParabolaPoint p2 = parabolaData.get(1);
-        initialAngle = Math.atan2(p1.y - p2.y, p1.x - p2.x) / Math.PI * 180 - 45;
 
         animateFrame(0);
 
@@ -89,7 +85,7 @@ public class AnimateActivity extends AppCompatActivity {
         PropertyValuesHolder pvhY = PropertyValuesHolder.ofFloat("translationY", -p2.y.floatValue());
         ObjectAnimator translateAnimator = ObjectAnimator.ofPropertyValuesHolder(projectileView, pvhX, pvhY);
 
-        Double rad = -Math.atan2(p1.y - p2.y, p1.x - p2.x) / Math.PI * 180 + 180 - initialAngle;
+        Double rad = (-(Math.atan2(p1.y - p2.y, p1.x - p2.x) / Math.PI) * 180) - 135;
         ObjectAnimator rotateAnimator = ObjectAnimator.ofFloat(projectileView, "rotation", rad.floatValue());
 
         AnimatorSet animatorSet = new AnimatorSet();

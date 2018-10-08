@@ -13,7 +13,6 @@ class Calculations {
         double xV = Math.sin(Math.toRadians(angle)) * velocity;
         double yV = Math.cos(Math.toRadians(angle)) * velocity;
         ArrayList<ParabolaPoint> res = new ArrayList<>();
-        res.add(new ParabolaPoint(0.0, 0.0, 0.0));
 
         double t = 0;
 

@@ -21,14 +21,24 @@ public class GraphActivity extends AppCompatActivity {
 
 
         assert parabolaData != null;
+        double max = 0;
 
         DataPoint[] dataPoints = new DataPoint[parabolaData.size()];
         for (int i = 0; i < parabolaData.size(); i++) {
             ParabolaPoint pp = parabolaData.get(i);
+            max = Math.max(max, pp.y);
             dataPoints[i] = new DataPoint(pp.t, pp.y);
         }
         GraphView graph = findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(dataPoints);
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints);
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMaxX(dataPoints[dataPoints.length - 1].getX() + 3);
+
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMaxY(max + 3);
+        graph.getViewport().setMinY(0);
+
+
         graph.addSeries(series);
 
     }
